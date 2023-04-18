@@ -18,9 +18,30 @@ const Game = (() => {
       ? `${playerOne.name} Turn`
       : `${playerTwo.name} Turn`;
   };
+  let isGameOver = false;
+  const getGameOver = () => isGameOver;
+  const changeGameOver = () => {
+    isGameOver = !isGameOver;
+  };
+  const displayWinner = () => {
+    const playerName = document.getElementById("playerTurn");
+    playerName.textContent = playerOneTurn
+      ? `${playerTwo.name} Wins!`
+      : `${playerOne.name} Wins!`;
+    changeGameOver();
+  };
+  const displayTie = () => {
+    const playerName = document.getElementById("playerTurn");
+    playerName.textContent = "That's a Tie!";
+    changeGameOver();
+  };
   return {
     getPlayerOne,
     changePlayer,
+    getGameOver,
+    changeGameOver,
+    displayWinner,
+    displayTie,
   };
 })();
 
@@ -38,62 +59,96 @@ const Gameboard = (() => {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
-    }
-    if (board[3] !== null && board[3] === board[4] && board[4] === board[5]) {
+      Game.displayWinner();
+    } else if (
+      board[3] !== null &&
+      board[3] === board[4] &&
+      board[4] === board[5]
+    ) {
       console.log("horizontal win!");
       for (let i = 3; i <= 5; i += 1) {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
-    }
-    if (board[6] !== null && board[6] === board[7] && board[7] === board[8]) {
+      Game.displayWinner();
+    } else if (
+      board[6] !== null &&
+      board[6] === board[7] &&
+      board[7] === board[8]
+    ) {
       console.log("horizontal win!");
       for (let i = 6; i <= 8; i += 1) {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
+      Game.displayWinner();
     }
+
     // vertical matches
-    if (board[0] !== null && board[0] === board[3] && board[3] === board[6]) {
+    else if (
+      board[0] !== null &&
+      board[0] === board[3] &&
+      board[3] === board[6]
+    ) {
       console.log("vertical win!");
       for (let i = 0; i <= 6; i += 3) {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
-    }
-    if (board[1] !== null && board[1] === board[4] && board[4] === board[7]) {
+      Game.displayWinner();
+    } else if (
+      board[1] !== null &&
+      board[1] === board[4] &&
+      board[4] === board[7]
+    ) {
       console.log("vertical win!");
       for (let i = 1; i <= 7; i += 3) {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
-    }
-    if (board[2] !== null && board[2] === board[5] && board[5] === board[8]) {
+      Game.displayWinner();
+    } else if (
+      board[2] !== null &&
+      board[2] === board[5] &&
+      board[5] === board[8]
+    ) {
       console.log("vertical win!");
       for (let i = 2; i <= 8; i += 3) {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
+      Game.displayWinner();
     }
+
     // perpendicular win
-    if (board[0] !== null && board[0] === board[4] && board[4] === board[8]) {
+    else if (
+      board[0] !== null &&
+      board[0] === board[4] &&
+      board[4] === board[8]
+    ) {
       console.log("perpendicular win!");
       for (let i = 0; i <= 8; i += 4) {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
-    }
-    if (board[2] !== null && board[2] === board[4] && board[4] === board[6]) {
+      Game.displayWinner();
+    } else if (
+      board[2] !== null &&
+      board[2] === board[4] &&
+      board[4] === board[6]
+    ) {
       console.log("perpendicular win!");
       for (let i = 2; i <= 6; i += 2) {
         const winnerBlock = document.querySelector(`[boardindex="${i}"]`);
         winnerBlock.classList.add("square-win");
       }
+      Game.displayWinner();
     }
 
     // tie
-    if (!board.includes(null)) {
+    else if (!board.includes(null)) {
       console.log("that's a tie!");
+      Game.displayTie();
     }
   };
   const renderBoard = () => {
@@ -105,15 +160,17 @@ const Gameboard = (() => {
       squareDiv.setAttribute("boardIndex", i);
       squareDiv.textContent = board[i];
       squareDiv.addEventListener("click", (e) => {
-        if (e.target.textContent) {
-          console.log("ALREADY PLAYED");
-        } else {
-          const arrayIndex = e.target.getAttribute("boardIndex");
-          e.target.textContent = Game.getPlayerOne() ? "x" : "o";
-          addPlay(Game.getPlayerOne() ? "x" : "o", arrayIndex);
-          Game.changePlayer();
-          console.log(board);
-          checkWinner(arrayIndex);
+        if (!Game.getGameOver()) {
+          if (e.target.textContent) {
+            console.log("ALREADY PLAYED");
+          } else {
+            const arrayIndex = e.target.getAttribute("boardIndex");
+            e.target.textContent = Game.getPlayerOne() ? "x" : "o";
+            addPlay(Game.getPlayerOne() ? "x" : "o", arrayIndex);
+            Game.changePlayer();
+            checkWinner(arrayIndex);
+            console.log(board);
+          }
         }
       });
       gameContainer.append(squareDiv);
