@@ -29,11 +29,19 @@ const Game = (() => {
       ? `${playerTwo.name} Wins!`
       : `${playerOne.name} Wins!`;
     changeGameOver();
+    // eslint-disable-next-line no-use-before-define
+    Gameboard.displayReplay();
   };
   const displayTie = () => {
     const playerName = document.getElementById("playerTurn");
     playerName.textContent = "That's a Tie!";
     changeGameOver();
+    // eslint-disable-next-line no-use-before-define
+    Gameboard.displayReplay();
+  };
+  const resetGame = () => {
+    playerOneTurn = true;
+    isGameOver = false;
   };
   return {
     getPlayerOne,
@@ -42,12 +50,13 @@ const Game = (() => {
     changeGameOver,
     displayWinner,
     displayTie,
+    resetGame,
   };
 })();
 
 // Gameboard module
 const Gameboard = (() => {
-  const board = [null, null, null, null, null, null, null, null, null];
+  let board = [null, null, null, null, null, null, null, null, null];
   const addPlay = (play, spot) => {
     board[spot] = play;
   };
@@ -169,17 +178,36 @@ const Gameboard = (() => {
             addPlay(Game.getPlayerOne() ? "x" : "o", arrayIndex);
             Game.changePlayer();
             checkWinner(arrayIndex);
-            console.log(board);
           }
         }
       });
       gameContainer.append(squareDiv);
     }
   };
+  const displayReplay = () => {
+    const container = document.getElementById("mainContainer");
+    const replayButton = document.createElement("button");
+    replayButton.textContent = "Play Again";
+    replayButton.addEventListener("click", () => {
+      const parentNode = document.getElementById("game-container");
+      while (parentNode.firstChild) {
+        parentNode.removeChild(parentNode.firstChild);
+      }
+      Game.resetGame();
+      const playerName = document.getElementById("playerTurn");
+      playerName.textContent = "Player One Turn";
+      board = [null, null, null, null, null, null, null, null, null];
+      renderBoard();
+      replayButton.remove();
+    });
+    container.append(replayButton);
+  };
   return {
     renderBoard,
     addPlay,
+    displayReplay,
   };
 })();
 
+// draw the board for the first time
 Gameboard.renderBoard();
