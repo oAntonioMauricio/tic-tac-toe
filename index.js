@@ -183,8 +183,14 @@ const Gameboard = (() => {
           if (e.target.textContent) {
             console.log("ALREADY PLAYED");
           } else {
+            const spanSvg = document.createElement("span");
+            spanSvg.classList.add("material-symbols-outlined");
+            spanSvg.textContent = Game.getPlayerOne()
+              ? "close"
+              : "radio_button_unchecked";
+            e.target.appendChild(spanSvg);
+
             const arrayIndex = e.target.getAttribute("boardIndex");
-            e.target.textContent = Game.getPlayerOne() ? "x" : "o";
             addPlay(Game.getPlayerOne() ? "x" : "o", arrayIndex);
             checkWinner(arrayIndex);
           }
@@ -224,7 +230,6 @@ Gameboard.renderBoard();
 
 // BOT
 const BotPlayer = (() => {
-  // eslint-disable-next-line prefer-const
   let availablePlays = [];
   const getAvailablePlays = () => {
     availablePlays = [];
