@@ -4,12 +4,12 @@ const Player = (name, symbol) => ({ name, symbol });
 const playerOne = Player("Player One", "x");
 const playerTwo = Player("Player Two", "o");
 
-console.log(playerOne);
-console.log(playerTwo);
-
 // Game Module
 const Game = (() => {
+  const isBotOn = true;
   let playerOneTurn = true;
+  let isGameOver = false;
+
   const getPlayerOne = () => playerOneTurn;
   const changePlayer = () => {
     playerOneTurn = !playerOneTurn;
@@ -17,17 +17,24 @@ const Game = (() => {
     playerName.textContent = playerOneTurn
       ? `${playerOne.name} Turn`
       : `${playerTwo.name} Turn`;
+    if (isBotOn && !playerOneTurn && !isGameOver) {
+      console.log("bot playing...");
+      // eslint-disable-next-line no-use-before-define
+      BotPlayer.getAvailablePlays();
+      // eslint-disable-next-line no-use-before-define
+      BotPlayer.makeRandomMove();
+    }
   };
-  let isGameOver = false;
   const getGameOver = () => isGameOver;
   const changeGameOver = () => {
     isGameOver = !isGameOver;
   };
   const displayWinner = () => {
+    console.log("let's display winner");
     const playerName = document.getElementById("playerTurn");
     playerName.textContent = playerOneTurn
-      ? `${playerTwo.name} Wins!`
-      : `${playerOne.name} Wins!`;
+      ? `${playerOne.name} Wins!`
+      : `${playerTwo.name} Wins!`;
     changeGameOver();
     // eslint-disable-next-line no-use-before-define
     Gameboard.displayReplay();
@@ -60,6 +67,7 @@ const Gameboard = (() => {
   const addPlay = (play, spot) => {
     board[spot] = play;
   };
+  const getBoard = () => board;
   const checkWinner = () => {
     // horizontal matches
     if (board[0] !== null && board[0] === board[1] && board[1] === board[2]) {
@@ -158,6 +166,8 @@ const Gameboard = (() => {
     else if (!board.includes(null)) {
       console.log("that's a tie!");
       Game.displayTie();
+    } else {
+      Game.changePlayer();
     }
   };
   const renderBoard = () => {
@@ -176,7 +186,6 @@ const Gameboard = (() => {
             const arrayIndex = e.target.getAttribute("boardIndex");
             e.target.textContent = Game.getPlayerOne() ? "x" : "o";
             addPlay(Game.getPlayerOne() ? "x" : "o", arrayIndex);
-            Game.changePlayer();
             checkWinner(arrayIndex);
           }
         }
@@ -203,6 +212,7 @@ const Gameboard = (() => {
     container.append(replayButton);
   };
   return {
+    getBoard,
     renderBoard,
     addPlay,
     displayReplay,
@@ -211,3 +221,30 @@ const Gameboard = (() => {
 
 // draw the board for the first time
 Gameboard.renderBoard();
+
+// BOT
+const BotPlayer = (() => {
+  // eslint-disable-next-line prefer-const
+  let availablePlays = [];
+  const getAvailablePlays = () => {
+    availablePlays = [];
+    Gameboard.getBoard().forEach((elem, index) => {
+      if (elem === null) {
+        availablePlays.push(index);
+      }
+    });
+    console.log(availablePlays);
+  };
+  const makeRandomMove = () => {
+    const random = Math.floor(Math.random() * availablePlays.length);
+    const randomMove = availablePlays[random];
+    const squareToClick = document.querySelector(
+      `[boardindex="${randomMove}"]`
+    );
+    squareToClick.click();
+  };
+  return {
+    getAvailablePlays,
+    makeRandomMove,
+  };
+})();
