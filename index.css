@@ -47,8 +47,14 @@
   border-width: 1px;
 }
 
-/* Restart Button */
-.restart-button {
+/*Buttons */
+.buttons-container {
+  display: flex;
+  gap: 20px;
+}
+
+.restart-button,
+.bot-button {
   margin-top: 50px;
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
@@ -63,9 +69,12 @@
   border-width: 1px;
   border-color: #d1d5db;
   border-style: solid;
+
+  display: inline-block;
 }
 
-.restart-button:hover {
+.restart-button:hover,
+.bot-button:hover {
   background-color: #f3f4f6;
   cursor: pointer;
 }

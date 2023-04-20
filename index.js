@@ -6,11 +6,14 @@ const playerTwo = Player("Player Two", "o");
 
 // Game Module
 const Game = (() => {
-  const isBotOn = true;
+  let isBotOn = true;
   let playerOneTurn = true;
   let isGameOver = false;
 
   const getPlayerOne = () => playerOneTurn;
+  const getGameOver = () => isGameOver;
+  const getBot = () => isBotOn;
+
   const changePlayer = () => {
     playerOneTurn = !playerOneTurn;
     const playerName = document.getElementById("playerTurn");
@@ -25,32 +28,42 @@ const Game = (() => {
       BotPlayer.makeRandomMove();
     }
   };
-  const getGameOver = () => isGameOver;
+
   const changeGameOver = () => {
     isGameOver = !isGameOver;
   };
+
+  const changeBot = () => {
+    isBotOn = !isBotOn;
+  };
+
   const displayWinner = () => {
     console.log("let's display winner");
     const playerName = document.getElementById("playerTurn");
     playerName.textContent = playerOneTurn
-      ? `${playerOne.name} Wins!`
-      : `${playerTwo.name} Wins!`;
+      ? `${playerOne.name} Wins! 🥳`
+      : `${playerTwo.name} Wins! 🥳`;
     changeGameOver();
   };
+
   const displayTie = () => {
     const playerName = document.getElementById("playerTurn");
-    playerName.textContent = "That's a Tie!";
+    playerName.textContent = "That's a Tie! 👔";
     changeGameOver();
   };
+
   const resetGame = () => {
     playerOneTurn = true;
     isGameOver = false;
   };
+
   return {
     getPlayerOne,
-    changePlayer,
     getGameOver,
+    getBot,
+    changePlayer,
     changeGameOver,
+    changeBot,
     displayWinner,
     displayTie,
     resetGame,
@@ -60,10 +73,13 @@ const Game = (() => {
 // Gameboard module
 const Gameboard = (() => {
   let board = [null, null, null, null, null, null, null, null, null];
+
   const addPlay = (play, spot) => {
     board[spot] = play;
   };
+
   const getBoard = () => board;
+
   const checkWinner = () => {
     // horizontal matches
     if (board[0] !== null && board[0] === board[1] && board[1] === board[2]) {
@@ -166,6 +182,7 @@ const Gameboard = (() => {
       Game.changePlayer();
     }
   };
+
   const renderBoard = () => {
     // render the the contents of the gameboard array to the webpage
     const gameContainer = document.getElementById("game-container");
@@ -194,7 +211,9 @@ const Gameboard = (() => {
       });
       gameContainer.append(squareDiv);
     }
+  };
 
+  const renderButtons = () => {
     // render the restart button
     const replayButton = document.getElementById("restartButton");
     replayButton.addEventListener("click", () => {
@@ -208,17 +227,27 @@ const Gameboard = (() => {
       board = [null, null, null, null, null, null, null, null, null];
       renderBoard();
     });
+
+    // render the vs button
+    const vsButton = document.getElementById("vsButton");
+    vsButton.addEventListener("click", () => {
+      replayButton.click();
+      Game.changeBot();
+      vsButton.textContent = Game.getBot() ? "Play VS Friend" : "Play VS Bot";
+    });
   };
 
   return {
     getBoard,
     renderBoard,
     addPlay,
+    renderButtons,
   };
 })();
 
 // draw the board for the first time
 Gameboard.renderBoard();
+Gameboard.renderButtons();
 
 // BOT
 const BotPlayer = (() => {
