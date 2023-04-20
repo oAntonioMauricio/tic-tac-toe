@@ -9,7 +9,7 @@ This is a Tic Tac Toe game created using JavaScript with the module pattern. The
 * Win/Tie detection and end game functionality
 
 ## Demo
-You can play the game online here.
+You can play the game online [here](https://oantoniomauricio.github.io/tic-tac-toe/)
 
 ## Technologies used
 This game was built using HTML, CSS, and JavaScript. The JavaScript code uses the module pattern.
