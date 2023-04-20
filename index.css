@@ -1,3 +1,7 @@
+:root {
+  font-family: "Lato", sans-serif;
+}
+
 .main-container {
   height: 100vh;
   display: flex;
@@ -40,5 +44,28 @@
 
 .square-win {
   border-color: blue;
-  border-width: 2px;
+  border-width: 1px;
+}
+
+/* Restart Button */
+.restart-button {
+  margin-top: 50px;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  border-width: 1px;
+  border-color: #d1d5db;
+  border-style: solid;
+}
+
+.restart-button:hover {
+  background-color: #f3f4f6;
+  cursor: pointer;
 }

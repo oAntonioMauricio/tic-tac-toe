@@ -36,15 +36,11 @@ const Game = (() => {
       ? `${playerOne.name} Wins!`
       : `${playerTwo.name} Wins!`;
     changeGameOver();
-    // eslint-disable-next-line no-use-before-define
-    Gameboard.displayReplay();
   };
   const displayTie = () => {
     const playerName = document.getElementById("playerTurn");
     playerName.textContent = "That's a Tie!";
     changeGameOver();
-    // eslint-disable-next-line no-use-before-define
-    Gameboard.displayReplay();
   };
   const resetGame = () => {
     playerOneTurn = true;
@@ -198,11 +194,9 @@ const Gameboard = (() => {
       });
       gameContainer.append(squareDiv);
     }
-  };
-  const displayReplay = () => {
-    const container = document.getElementById("mainContainer");
-    const replayButton = document.createElement("button");
-    replayButton.textContent = "Play Again";
+
+    // render the restart button
+    const replayButton = document.getElementById("restartButton");
     replayButton.addEventListener("click", () => {
       const parentNode = document.getElementById("game-container");
       while (parentNode.firstChild) {
@@ -213,15 +207,13 @@ const Gameboard = (() => {
       playerName.textContent = "Player One Turn";
       board = [null, null, null, null, null, null, null, null, null];
       renderBoard();
-      replayButton.remove();
     });
-    container.append(replayButton);
   };
+
   return {
     getBoard,
     renderBoard,
     addPlay,
-    displayReplay,
   };
 })();
 
